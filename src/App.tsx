@@ -1,9 +1,14 @@
+import { ThemeProvider } from "styled-components";
+import { darkTheme } from "./styles/theme/dark";
+import { GlobalStyle } from "./styles/global";
+
 export function App() {
   return (
-    <div>
-      <h1>hello Word</h1>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <h1>Teste</h1>
+      <h1>Teste</h1>
+      <h1>Teste</h1>
+      <GlobalStyle />
+    </ThemeProvider>
   );
 }
-
-
