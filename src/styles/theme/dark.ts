@@ -12,10 +12,10 @@ export const darkTheme = {
   "green-500": "#00875F",
   "green-700": "#015F43",
 
-  "purple-600": "#8E24AA",
-  "purple-700": "#7B1FA2",
-  "purple-800": "#6A1B9A",
-  "purple-900": "#4A148C",
+  "purple-600": "#8E42ED",
+  "purple-700": "#7738C8",
+  "purple-800": "#6725BB",
+  "purple-900": "#461D93",
 
   "red-500": "#AB222E",
   "red-700": "#7A1921",
