@@ -1,4 +1,4 @@
-function App() {
+export function App() {
   return (
     <div>
       <h1>hello Word</h1>
@@ -6,4 +6,4 @@ function App() {
   );
 }
 
-export default App;
+
