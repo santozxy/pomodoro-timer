@@ -79,6 +79,7 @@ export function Home() {
           );
           setAmountSecondsPassed(totalSeconds);
           clearInterval(interval);
+          reset();
           setActiveCycleId(null);
           setFinishedCycle(true);
         } else {
@@ -102,6 +103,7 @@ export function Home() {
         }
       })
     );
+    reset();
     setActiveCycleId(null);
   }
 
@@ -118,7 +120,6 @@ export function Home() {
     setActiveCycleId(id);
     setAmountSecondsPassed(0);
     setFinishedCycle(false);
-    reset();
   }
 
   useEffect(() => {
