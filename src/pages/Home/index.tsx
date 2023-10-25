@@ -79,9 +79,9 @@ export function Home() {
           );
           setAmountSecondsPassed(totalSeconds);
           clearInterval(interval);
-          reset();
           setActiveCycleId(null);
           setFinishedCycle(true);
+          reset();
         } else {
           setAmountSecondsPassed(secondsDifference);
         }
@@ -91,7 +91,7 @@ export function Home() {
     return () => {
       clearInterval(interval);
     };
-  }, [activeCycle, totalSeconds, activeCycleId]);
+  }, [activeCycle, totalSeconds, activeCycleId, reset]);
 
   function handleInterruptedCycle() {
     setCycles((state) =>
