@@ -8,6 +8,7 @@ import {
   CountdownContainer,
   FormContainer,
   HomeContainer,
+  Message,
   MinutesAmountInput,
   Separator,
   StartCountdownButton,
@@ -19,7 +20,7 @@ const newTaskFormValidationSchema = zod.object({
   task: zod.string().min(6, "Informe a tarefa").max(30),
   minutesAmount: zod
     .number()
-    .min(5, "O ciclo precisa ser no mínimo de 5 minutos")
+    .min(1, "O ciclo precisa ser no mínimo de 5 minutos")
     .max(60, "O ciclo precisa ser no máximo de 60 minutos"),
 });
 
@@ -30,13 +31,25 @@ interface Cycle {
   task: string;
   minutesAmout: number;
   startDate: Date;
-  interruptedDate?: Date;
+  interruptedCycleDate?: Date;
+  finishedCycleDate?: Date;
 }
 
 export function Home() {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0);
+  const [finishedCycle, setFinishedCycle] = useState<boolean>(false);
+
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+  const totalSeconds = activeCycle ? activeCycle.minutesAmout * 60 : 0;
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
+
+  const totalMinutes = Math.floor(currentSeconds / 60);
+  const secondsAmount = currentSeconds % 60;
+
+  const minutes = String(totalMinutes).padStart(2, "0");
+  const seconds = String(secondsAmount).padStart(2, "0");
 
   const { register, handleSubmit, watch, reset } = useForm<NewTaskFormData>({
     resolver: zodResolver(newTaskFormValidationSchema),
@@ -45,30 +58,45 @@ export function Home() {
       minutesAmount: 0,
     },
   });
-
-  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
-
   useEffect(() => {
     let interval: number;
 
     if (activeCycle) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate)
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate
         );
+        if (secondsDifference >= totalSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCycleId) {
+                return { ...cycle, finishedCycleDate: new Date() };
+              } else {
+                return cycle;
+              }
+            })
+          );
+          setAmountSecondsPassed(totalSeconds);
+          clearInterval(interval);
+          setActiveCycleId(null);
+          setFinishedCycle(true);
+        } else {
+          setAmountSecondsPassed(secondsDifference);
+        }
       }, 1000);
     }
 
     return () => {
       clearInterval(interval);
     };
-  }, [activeCycle]);
+  }, [activeCycle, totalSeconds, activeCycleId]);
 
   function handleInterruptedCycle() {
-    setCycles(
-      cycles.map((cycle) => {
+    setCycles((state) =>
+      state.map((cycle) => {
         if (cycle.id === activeCycleId) {
-          return { ...cycle, interruptedDate: new Date() };
+          return { ...cycle, interruptedCycleDate: new Date() };
         } else {
           return cycle;
         }
@@ -89,17 +117,9 @@ export function Home() {
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id);
     setAmountSecondsPassed(0);
+    setFinishedCycle(false);
     reset();
   }
-
-  const totalSeconds = activeCycle ? activeCycle.minutesAmout * 60 : 0;
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
-
-  const totalMinutes = Math.floor(currentSeconds / 60);
-  const secondsAmount = currentSeconds % 60;
-
-  const minutes = String(totalMinutes).padStart(2, "0");
-  const seconds = String(secondsAmount).padStart(2, "0");
 
   useEffect(() => {
     if (activeCycle) {
@@ -136,7 +156,7 @@ export function Home() {
             id="minutesAmount"
             type="number"
             placeholder="00"
-            step={5}
+            step={1}
             disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
           />
@@ -163,6 +183,12 @@ export function Home() {
           </StartCountdownButton>
         )}
       </form>
+
+      <Message>
+        {finishedCycle
+          ? "Parabéns, você concluiu o projeto dentro da estimativa de tempo, você pode visualiizar seu projeto na aba History"
+          : ""}
+      </Message>
     </HomeContainer>
   );
 }

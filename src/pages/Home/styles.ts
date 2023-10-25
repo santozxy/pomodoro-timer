@@ -124,3 +124,9 @@ export const StopCountdownButton = styled(BaseCountdownButton)`
     background-color: ${(props) => props.theme["red-700"]};
   }
 `;
+
+export const Message = styled.h2`
+  font-size: 1rem;
+  text-align: center;
+  color: ${(props) => props.theme["green-500"]};
+`;
