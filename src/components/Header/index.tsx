@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { HeaderContainer, Logo } from "./styles";
 import logoPomodoro from "../../assets/logoPomodoro.png";
-import { Timer } from "phosphor-react";
+import { Timer, Notepad } from "phosphor-react";
 
 export function Header() {
   return (
@@ -17,7 +17,7 @@ export function Header() {
           <Timer size={30} />
         </NavLink>
         <NavLink to={"/history"} title="Histórico">
-          <Timer size={30} />
+          <Notepad size={30} />
         </NavLink>
       </nav>
     </HeaderContainer>
