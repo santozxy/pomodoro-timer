@@ -59,7 +59,7 @@ export function Home() {
     },
   });
   useEffect(() => {
-    let interval: number;
+    let interval: undefined | ReturnType<typeof setTimeout>;
 
     if (activeCycle) {
       interval = setInterval(() => {
@@ -125,8 +125,10 @@ export function Home() {
   useEffect(() => {
     if (activeCycle) {
       document.title = `${minutes}:${seconds}`;
+    } else {
+      document.title = 'Pomodoro Timer'
     }
-  }, [minutes, seconds, activeCycle]);
+  }, [minutes, seconds, activeCycle, activeCycleId]);
 
   const task = watch("task");
   const minutesAmount = watch("minutesAmount");
@@ -157,7 +159,8 @@ export function Home() {
             id="minutesAmount"
             type="number"
             placeholder="00"
-            step={1}
+            step={5}
+            min={5}
             disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
           />
