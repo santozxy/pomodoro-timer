@@ -126,6 +126,8 @@ export const StopCountdownButton = styled(BaseCountdownButton)`
 `;
 
 export const Message = styled.h2`
+  width: 80%;
+  margin-top: 2rem;
   font-size: 1rem;
   text-align: center;
   color: ${(props) => props.theme["green-500"]};

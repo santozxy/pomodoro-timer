@@ -183,10 +183,9 @@ export function Home() {
           </StartCountdownButton>
         )}
       </form>
-
       <Message>
         {finishedCycle
-          ? "Parabéns, você concluiu o projeto dentro da estimativa de tempo, você pode visualiizar seu projeto na aba History"
+          ? "Parabéns, você concluiu o projeto dentro da estimativa de tempo, você pode visualizar seu projeto na aba History"
           : ""}
       </Message>
     </HomeContainer>
