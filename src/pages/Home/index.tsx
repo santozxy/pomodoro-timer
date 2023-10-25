@@ -30,6 +30,7 @@ interface Cycle {
   task: string;
   minutesAmout: number;
   startDate: Date;
+  interruptedDate?: Date;
 }
 
 export function Home() {
@@ -62,6 +63,19 @@ export function Home() {
       clearInterval(interval);
     };
   }, [activeCycle]);
+
+  function handleInterruptedCycle() {
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() };
+        } else {
+          return cycle;
+        }
+      })
+    );
+    setActiveCycleId(null);
+  }
 
   function handleCreateNewTask(data: NewTaskFormData) {
     const id = String(new Date().getTime());
@@ -108,6 +122,7 @@ export function Home() {
             type="text"
             list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
+            disabled={!!activeCycle}
             {...register("task")}
           />
           <datalist id="task-suggestions">
@@ -122,6 +137,7 @@ export function Home() {
             type="number"
             placeholder="00"
             step={5}
+            disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
           />
           <span>Minutos.</span>
@@ -136,10 +152,7 @@ export function Home() {
         </CountdownContainer>
 
         {activeCycle ? (
-          <StopCountdownButton
-            type="button"
-            onClick={() => console.log("Teste")}
-          >
+          <StopCountdownButton type="button" onClick={handleInterruptedCycle}>
             {" "}
             <HandPalm size={24} /> Interromper
           </StopCountdownButton>
